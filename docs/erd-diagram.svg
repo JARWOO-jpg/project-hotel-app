@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e1e2f"/>
+      <stop offset="100%" stop-color="#14141e"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="crowsFoot" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 10 5 L 0 0 M 10 5 L 0 10 M 5 0 L 5 10" fill="none" stroke="#fff" stroke-width="1.5"/>
+    </marker>
+    <marker id="one" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 5 0 L 5 10 M 0 5 L 10 5" fill="none" stroke="#fff" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="url(#bgGrad)"/>
+  
+  <text x="600" y="50" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold">Entity Relationship Diagram (ERD)</text>
+  <text x="600" y="80" text-anchor="middle" fill="#aaa" font-size="16">Hotel Nusantara Management System</text>
+
+  <!-- USERS Table -->
+  <g transform="translate(100, 150)" filter="url(#shadow)">
+    <rect width="260" height="30" fill="#f6d365"/>
+    <rect y="30" width="260" height="230" fill="#2d2d44"/>
+    <text x="130" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">1. USERS</text>
+    
+    <text x="10" y="55" fill="#f6d365" font-size="13" font-weight="bold">PK</text>
+    <text x="40" y="55" fill="#fff" font-size="13">id (bigint)</text>
+    
+    <text x="40" y="80" fill="#ddd" font-size="13">name (varchar)</text>
+    <text x="40" y="105" fill="#ddd" font-size="13">email (varchar, unique)</text>
+    <text x="40" y="130" fill="#ddd" font-size="13">phone (varchar, null)</text>
+    <text x="40" y="155" fill="#ddd" font-size="13">password (varchar)</text>
+    <text x="40" y="180" fill="#ddd" font-size="13">role (enum)</text>
+    <text x="40" y="205" fill="#ddd" font-size="13">email_verified_at (timestamp)</text>
+    <text x="40" y="230" fill="#ddd" font-size="13">created_at, updated_at</text>
+  </g>
+
+  <!-- ROOMS Table -->
+  <g transform="translate(100, 480)" filter="url(#shadow)">
+    <rect width="260" height="30" fill="#00c6ff"/>
+    <rect y="30" width="260" height="260" fill="#2d2d44"/>
+    <text x="130" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">2. ROOMS</text>
+    
+    <text x="10" y="55" fill="#f6d365" font-size="13" font-weight="bold">PK</text>
+    <text x="40" y="55" fill="#fff" font-size="13">id (bigint)</text>
+    
+    <text x="40" y="80" fill="#ddd" font-size="13">room_number (varchar, unique)</text>
+    <text x="40" y="105" fill="#ddd" font-size="13">type (enum)</text>
+    <text x="40" y="130" fill="#ddd" font-size="13">price_per_night (decimal)</text>
+    <text x="40" y="155" fill="#ddd" font-size="13">capacity (int)</text>
+    <text x="40" y="180" fill="#ddd" font-size="13">description (text)</text>
+    <text x="40" y="205" fill="#ddd" font-size="13">image (varchar)</text>
+    <text x="40" y="230" fill="#ddd" font-size="13">status (enum)</text>
+    <text x="40" y="255" fill="#ddd" font-size="13">amenities (json), dates...</text>
+  </g>
+
+  <!-- BOOKINGS Table -->
+  <g transform="translate(470, 200)" filter="url(#shadow)">
+    <rect width="280" height="30" fill="#43e97b"/>
+    <rect y="30" width="280" height="420" fill="#2d2d44"/>
+    <text x="140" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">3. BOOKINGS</text>
+    
+    <text x="10" y="55" fill="#f6d365" font-size="13" font-weight="bold">PK</text>
+    <text x="40" y="55" fill="#fff" font-size="13">id (bigint)</text>
+    
+    <text x="40" y="80" fill="#ddd" font-size="13">booking_code (varchar, unique)</text>
+    
+    <text x="10" y="105" fill="#00c6ff" font-size="13" font-weight="bold">FK</text>
+    <text x="40" y="105" fill="#00c6ff" font-size="13">user_id (→ users.id)</text>
+    
+    <text x="10" y="130" fill="#00c6ff" font-size="13" font-weight="bold">FK</text>
+    <text x="40" y="130" fill="#00c6ff" font-size="13">room_id (→ rooms.id)</text>
+
+    <text x="40" y="155" fill="#ddd" font-size="13">check_in_date (date)</text>
+    <text x="40" y="180" fill="#ddd" font-size="13">check_out_date (date)</text>
+    <text x="40" y="205" fill="#ddd" font-size="13">actual_check_in (timestamp)</text>
+    <text x="40" y="230" fill="#ddd" font-size="13">actual_check_out (timestamp)</text>
+    <text x="40" y="255" fill="#ddd" font-size="13">guests (int)</text>
+    <text x="40" y="280" fill="#ddd" font-size="13">status (enum)</text>
+    <text x="40" y="305" fill="#ddd" font-size="13">payment_type (enum)</text>
+    <text x="40" y="330" fill="#ddd" font-size="13">total_price (decimal)</text>
+    <text x="40" y="355" fill="#ddd" font-size="13">paid_amount (decimal)</text>
+    <text x="40" y="380" fill="#ddd" font-size="13">refund_amount (decimal)</text>
+    <text x="40" y="405" fill="#ddd" font-size="13">special_request (text)</text>
+    <text x="40" y="430" fill="#ddd" font-size="13">created_at, updated_at</text>
+  </g>
+
+  <!-- TRANSACTIONS Table -->
+  <g transform="translate(850, 150)" filter="url(#shadow)">
+    <rect width="250" height="30" fill="#a18cd1"/>
+    <rect y="30" width="250" height="230" fill="#2d2d44"/>
+    <text x="125" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">4. TRANSACTIONS</text>
+    
+    <text x="10" y="55" fill="#f6d365" font-size="13" font-weight="bold">PK</text>
+    <text x="40" y="55" fill="#fff" font-size="13">id (bigint)</text>
+    
+    <text x="40" y="80" fill="#ddd" font-size="13">transaction_code (varchar)</text>
+    
+    <text x="10" y="105" fill="#00c6ff" font-size="13" font-weight="bold">FK</text>
+    <text x="40" y="105" fill="#00c6ff" font-size="13">booking_id (→ bookings.id)</text>
+    
+    <text x="40" y="130" fill="#ddd" font-size="13">type (enum)</text>
+    <text x="40" y="155" fill="#ddd" font-size="13">amount (decimal)</text>
+    <text x="40" y="180" fill="#ddd" font-size="13">payment_method (enum)</text>
+    <text x="40" y="205" fill="#ddd" font-size="13">status (enum)</text>
+    <text x="40" y="230" fill="#ddd" font-size="13">notes (text), dates...</text>
+  </g>
+
+  <!-- SERVICES Table -->
+  <g transform="translate(850, 430)" filter="url(#shadow)">
+    <rect width="250" height="30" fill="#fd8a3e"/>
+    <rect y="30" width="250" height="200" fill="#2d2d44"/>
+    <text x="125" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">5. SERVICES</text>
+    
+    <text x="10" y="55" fill="#f6d365" font-size="13" font-weight="bold">PK</text>
+    <text x="40" y="55" fill="#fff" font-size="13">id (bigint)</text>
+    
+    <text x="10" y="80" fill="#00c6ff" font-size="13" font-weight="bold">FK</text>
+    <text x="40" y="80" fill="#00c6ff" font-size="13">booking_id (→ bookings.id)</text>
+    
+    <text x="40" y="105" fill="#ddd" font-size="13">service_type (enum)</text>
+    <text x="40" y="130" fill="#ddd" font-size="13">description (varchar)</text>
+    <text x="40" y="155" fill="#ddd" font-size="13">amount (decimal)</text>
+    <text x="40" y="180" fill="#ddd" font-size="13">quantity (int)</text>
+    <text x="40" y="205" fill="#ddd" font-size="13">total (decimal), status...</text>
+  </g>
+
+  <!-- SITE SETTINGS Table -->
+  <g transform="translate(850, 680)" filter="url(#shadow)">
+    <rect width="250" height="30" fill="#f5576c"/>
+    <rect y="30" width="250" height="150" fill="#2d2d44"/>
+    <text x="125" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">6. SITE_SETTINGS</text>
+    
+    <text x="10" y="55" fill="#f6d365" font-size="13" font-weight="bold">PK</text>
+    <text x="40" y="55" fill="#fff" font-size="13">id (bigint)</text>
+    
+    <text x="40" y="80" fill="#ddd" font-size="13">key (varchar, unique)</text>
+    <text x="40" y="105" fill="#ddd" font-size="13">group (varchar)</text>
+    <text x="40" y="130" fill="#ddd" font-size="13">label (varchar)</text>
+    <text x="40" y="155" fill="#ddd" font-size="13">value (text)</text>
+  </g>
+
+  <!-- Lines representing Relationships -->
+  
+  <!-- Users to Bookings (1:M) -->
+  <line x1="360" y1="265" x2="470" y2="265" stroke="#fff" stroke-width="2" marker-start="url(#one)" marker-end="url(#crowsFoot)"/>
+  <text x="415" y="255" fill="#fff" font-size="12">1 : M</text>
+
+  <!-- Rooms to Bookings (1:M) -->
+  <path d="M 360 610 L 400 610 L 400 310 L 470 310" fill="none" stroke="#fff" stroke-width="2" marker-start="url(#one)" marker-end="url(#crowsFoot)"/>
+  <text x="415" y="300" fill="#fff" font-size="12">1 : M</text>
+
+  <!-- Bookings to Transactions (1:M) -->
+  <line x1="750" y1="265" x2="850" y2="265" stroke="#fff" stroke-width="2" marker-start="url(#one)" marker-end="url(#crowsFoot)"/>
+  <text x="800" y="255" fill="#fff" font-size="12">1 : M</text>
+
+  <!-- Bookings to Services (1:M) -->
+  <path d="M 750 410 L 800 410 L 800 530 L 850 530" fill="none" stroke="#fff" stroke-width="2" marker-start="url(#one)" marker-end="url(#crowsFoot)"/>
+  <text x="805" y="520" fill="#fff" font-size="12">1 : M</text>
+
+</svg>

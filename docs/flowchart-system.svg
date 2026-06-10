@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e27"/>
+      <stop offset="100%" stop-color="#1a1040"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6d365"/>
+      <stop offset="100%" stop-color="#fda085"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00c6ff"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a18cd1"/>
+      <stop offset="100%" stop-color="#fbc2eb"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrowGold" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f6d365"/>
+    </marker>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#00c6ff"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc2eb"/>
+    </marker>
+    <marker id="arrowWhite" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#fff"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="950" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="600" y="45" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold">FLOWCHART SISTEM (COMBINED)</text>
+  <text x="600" y="72" text-anchor="middle" fill="#aaa" font-size="14">Hotel Nusantara Management System</text>
+
+  <!-- START -->
+  <ellipse cx="600" cy="130" rx="80" ry="30" fill="none" stroke="#fff" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="600" y="136" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">START</text>
+
+  <!-- Arrow -->
+  <line x1="600" y1="160" x2="600" y2="190" stroke="#fff" stroke-width="2" marker-end="url(#arrowWhite)"/>
+
+  <!-- Access System -->
+  <rect x="480" y="190" width="240" height="50" rx="12" fill="none" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="220" text-anchor="middle" fill="#fff" font-size="15">Akses Sistem Hotel</text>
+
+  <!-- Arrow -->
+  <line x1="600" y1="240" x2="600" y2="280" stroke="#fff" stroke-width="2" marker-end="url(#arrowWhite)"/>
+
+  <!-- Decision Role -->
+  <polygon points="600,280 720,330 600,380 480,330" fill="none" stroke="#fff" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="600" y="325" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Identifikasi</text>
+  <text x="600" y="345" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Role?</text>
+
+  <!-- Branch Lines -->
+  <!-- Left (Guest) -->
+  <line x1="480" y1="330" x2="250" y2="330" stroke="#f6d365" stroke-width="2"/>
+  <line x1="250" y1="330" x2="250" y2="400" stroke="#f6d365" stroke-width="2" marker-end="url(#arrowGold)"/>
+  
+  <!-- Center (Receptionist) -->
+  <line x1="600" y1="380" x2="600" y2="400" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Right (Admin) -->
+  <line x1="720" y1="330" x2="950" y2="330" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="950" y1="330" x2="950" y2="400" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <!-- Labels -->
+  <text x="365" y="320" text-anchor="middle" fill="#f6d365" font-size="16" font-weight="bold">GUEST (Tamu)</text>
+  <text x="660" y="390" text-anchor="start" fill="#00c6ff" font-size="16" font-weight="bold">RECEPTIONIST</text>
+  <text x="835" y="320" text-anchor="middle" fill="#fbc2eb" font-size="16" font-weight="bold">ADMIN</text>
+
+  <!-- ==================== GUEST PATH ==================== -->
+  <rect x="130" y="400" width="240" height="50" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="250" y="430" text-anchor="middle" fill="#fff" font-size="15">Pencarian &amp; Pilih Kamar</text>
+
+  <line x1="250" y1="450" x2="250" y2="480" stroke="#f6d365" stroke-width="2" marker-end="url(#arrowGold)"/>
+
+  <rect x="130" y="480" width="240" height="50" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="250" y="510" text-anchor="middle" fill="#fff" font-size="15">Login / Registrasi</text>
+
+  <line x1="250" y1="530" x2="250" y2="560" stroke="#f6d365" stroke-width="2" marker-end="url(#arrowGold)"/>
+
+  <rect x="130" y="560" width="240" height="50" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="250" y="590" text-anchor="middle" fill="#fff" font-size="15">Pembayaran (DP/Full)</text>
+
+  <line x1="250" y1="610" x2="250" y2="640" stroke="#f6d365" stroke-width="2" marker-end="url(#arrowGold)"/>
+
+  <rect x="130" y="640" width="240" height="50" rx="12" fill="rgba(246,211,101,0.2)" stroke="url(#goldGrad)" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="250" y="670" text-anchor="middle" fill="#f6d365" font-size="15" font-weight="bold">Booking Terkonfirmasi</text>
+  
+  <line x1="250" y1="690" x2="250" y2="820" stroke="#f6d365" stroke-width="2"/>
+
+  <!-- ==================== RECEPTIONIST PATH ==================== -->
+  <rect x="480" y="400" width="240" height="50" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="430" text-anchor="middle" fill="#fff" font-size="15">Login Staff</text>
+
+  <line x1="600" y1="450" x2="600" y2="480" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <rect x="480" y="480" width="240" height="50" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="510" text-anchor="middle" fill="#fff" font-size="15">Proses Check-In</text>
+
+  <line x1="600" y1="530" x2="600" y2="560" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <rect x="480" y="560" width="240" height="50" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="590" text-anchor="middle" fill="#fff" font-size="15">Manajemen Layanan Kamar</text>
+
+  <line x1="600" y1="610" x2="600" y2="640" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <rect x="480" y="640" width="240" height="50" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="670" text-anchor="middle" fill="#fff" font-size="15">Proses Check-Out &amp; Invoice</text>
+
+  <line x1="600" y1="690" x2="600" y2="820" stroke="#00c6ff" stroke-width="2"/>
+
+  <!-- ==================== ADMIN PATH ==================== -->
+  <rect x="830" y="400" width="240" height="50" rx="12" fill="none" stroke="url(#purpleGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="950" y="430" text-anchor="middle" fill="#fff" font-size="15">Login Admin</text>
+
+  <line x1="950" y1="450" x2="950" y2="480" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <rect x="830" y="480" width="240" height="50" rx="12" fill="none" stroke="url(#purpleGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="950" y="510" text-anchor="middle" fill="#fff" font-size="15">Dashboard &amp; Laporan</text>
+
+  <line x1="950" y1="530" x2="950" y2="560" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <rect x="830" y="560" width="240" height="50" rx="12" fill="none" stroke="url(#purpleGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="950" y="590" text-anchor="middle" fill="#fff" font-size="15">CRUD Kamar, User &amp; Booking</text>
+
+  <line x1="950" y1="610" x2="950" y2="640" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <rect x="830" y="640" width="240" height="50" rx="12" fill="none" stroke="url(#purpleGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="950" y="670" text-anchor="middle" fill="#fff" font-size="15">Manajemen Konten (CMS)</text>
+
+  <line x1="950" y1="690" x2="950" y2="820" stroke="#fbc2eb" stroke-width="2"/>
+
+  <!-- ==================== END MERGE ==================== -->
+  <line x1="250" y1="820" x2="600" y2="820" stroke="#f6d365" stroke-width="2"/>
+  <line x1="950" y1="820" x2="600" y2="820" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="600" y1="820" x2="600" y2="850" stroke="#fff" stroke-width="2" marker-end="url(#arrowWhite)"/>
+
+  <ellipse cx="600" cy="880" rx="80" ry="30" fill="none" stroke="#fff" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="600" y="886" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">SELESAI</text>
+
+</svg>

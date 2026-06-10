@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1350" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e27"/>
+      <stop offset="100%" stop-color="#1a1040"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00c6ff"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
+    <linearGradient id="cyanGradLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#89f7fe"/>
+      <stop offset="100%" stop-color="#66a6ff"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#00c6ff"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="1350" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="450" y="45" text-anchor="middle" fill="#00c6ff" font-size="28" font-weight="bold" filter="url(#glow)">FLOWCHART SISTEM — ALUR RECEPTIONIST</text>
+  <text x="450" y="72" text-anchor="middle" fill="#aaa" font-size="14">Hotel Nusantara Management System</text>
+
+  <!-- ==================== START ==================== -->
+  <ellipse cx="450" cy="120" rx="70" ry="28" fill="none" stroke="url(#cyanGradLight)" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="450" y="126" text-anchor="middle" fill="#00c6ff" font-size="16" font-weight="bold">MULAI</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="148" x2="450" y2="178" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Login -->
+  <rect x="330" y="180" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="210" text-anchor="middle" fill="#fff" font-size="15">Login (Role: Receptionist)</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="228" x2="450" y2="258" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Dashboard -->
+  <rect x="330" y="260" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="290" text-anchor="middle" fill="#fff" font-size="15">Dashboard Resepsionis</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="308" x2="450" y2="338" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Search Booking -->
+  <rect x="330" y="340" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="370" text-anchor="middle" fill="#fff" font-size="15">Cari Booking Tamu</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="388" x2="450" y2="418" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Check-In Process -->
+  <rect x="330" y="420" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="450" text-anchor="middle" fill="#fff" font-size="15">Proses Check-In</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="468" x2="450" y2="498" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Assign Room -->
+  <rect x="330" y="500" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="530" text-anchor="middle" fill="#fff" font-size="15">Assign Kamar ke Tamu</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="548" x2="450" y2="578" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Room Status: Occupied (Data state - parallelogram) -->
+  <polygon points="350,580 570,580 550,628 330,628" fill="rgba(0,198,255,0.1)" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="609" text-anchor="middle" fill="#00c6ff" font-size="14" font-style="italic">Update Status Kamar: Occupied</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="628" x2="450" y2="668" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Decision: Add Services? -->
+  <polygon points="450,670 560,710 450,750 340,710" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="705" text-anchor="middle" fill="#00c6ff" font-size="13" font-weight="bold">Tambah</text>
+  <text x="450" y="720" text-anchor="middle" fill="#00c6ff" font-size="13" font-weight="bold">Layanan?</text>
+
+  <!-- YES Branch -->
+  <text x="580" y="705" text-anchor="middle" fill="#00c6ff" font-size="12" font-weight="bold">YA</text>
+  <line x1="560" y1="710" x2="680" y2="710" stroke="#00c6ff" stroke-width="2"/>
+  <line x1="680" y1="710" x2="680" y2="740" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Add Services -->
+  <rect x="560" y="742" width="240" height="60" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="680" y="765" text-anchor="middle" fill="#fff" font-size="14">Input Layanan Tambahan</text>
+  <text x="680" y="785" text-anchor="middle" fill="#00c6ff" font-size="11">(Room Service / Laundry / Dll)</text>
+
+  <!-- Arrow back -->
+  <line x1="680" y1="802" x2="680" y2="830" stroke="#00c6ff" stroke-width="2"/>
+  <line x1="680" y1="830" x2="450" y2="830" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- NO Branch -->
+  <text x="450" y="775" text-anchor="middle" fill="#00c6ff" font-size="12" font-weight="bold">TIDAK</text>
+  <line x1="450" y1="750" x2="450" y2="830" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Check-Out Process -->
+  <rect x="330" y="832" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="862" text-anchor="middle" fill="#fff" font-size="15">Proses Check-Out</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="880" x2="450" y2="910" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Calculate Final Bill -->
+  <rect x="330" y="912" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="942" text-anchor="middle" fill="#fff" font-size="15">Hitung Tagihan Final</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="960" x2="450" y2="990" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Payment Collection -->
+  <rect x="330" y="992" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="1022" text-anchor="middle" fill="#fff" font-size="15">Pelunasan Pembayaran</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="1040" x2="450" y2="1070" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Room Status: Available (Data state - parallelogram) -->
+  <polygon points="350,1072 570,1072 550,1120 330,1120" fill="rgba(0,198,255,0.1)" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="1101" text-anchor="middle" fill="#00c6ff" font-size="14" font-style="italic">Update Status Kamar: Available</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="1120" x2="450" y2="1150" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- Print Invoice -->
+  <rect x="330" y="1152" width="240" height="48" rx="12" fill="none" stroke="url(#cyanGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="1182" text-anchor="middle" fill="#fff" font-size="15">Cetak Invoice Final</text>
+
+  <!-- Arrow -->
+  <line x1="450" y1="1200" x2="450" y2="1230" stroke="#00c6ff" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+  <!-- END -->
+  <ellipse cx="450" cy="1258" rx="70" ry="28" fill="none" stroke="url(#cyanGradLight)" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="450" y="1264" text-anchor="middle" fill="#00c6ff" font-size="16" font-weight="bold">SELESAI</text>
+
+  <text x="450" y="1328" text-anchor="middle" fill="#666" font-size="11">© Hotel Nusantara Management System — Flowchart Alur Receptionist</text>
+</svg>

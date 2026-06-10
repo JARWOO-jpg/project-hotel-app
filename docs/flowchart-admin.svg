@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e27"/>
+      <stop offset="100%" stop-color="#1a1040"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a18cd1"/>
+      <stop offset="100%" stop-color="#fbc2eb"/>
+    </linearGradient>
+    <linearGradient id="magentaGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#cc2b5e"/>
+      <stop offset="100%" stop-color="#753a88"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrowMagenta" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc2eb"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="900" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="500" y="45" text-anchor="middle" fill="#fbc2eb" font-size="28" font-weight="bold" filter="url(#glow)">FLOWCHART SISTEM — ALUR ADMIN</text>
+  <text x="500" y="72" text-anchor="middle" fill="#aaa" font-size="14">Hotel Nusantara Management System</text>
+
+  <!-- ==================== START ==================== -->
+  <ellipse cx="500" cy="120" rx="70" ry="28" fill="none" stroke="url(#purpleGrad)" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="500" y="126" text-anchor="middle" fill="#fbc2eb" font-size="16" font-weight="bold">MULAI</text>
+
+  <!-- Arrow -->
+  <line x1="500" y1="148" x2="500" y2="178" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+
+  <!-- Login -->
+  <rect x="380" y="180" width="240" height="48" rx="12" fill="none" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="500" y="210" text-anchor="middle" fill="#fff" font-size="15">Login (Role: Admin)</text>
+
+  <!-- Arrow -->
+  <line x1="500" y1="228" x2="500" y2="258" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+
+  <!-- Dashboard -->
+  <rect x="380" y="260" width="240" height="48" rx="12" fill="none" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="500" y="290" text-anchor="middle" fill="#fff" font-size="15">Dashboard Admin</text>
+
+  <!-- Branching Line -->
+  <line x1="500" y1="308" x2="500" y2="340" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="160" y1="340" x2="840" y2="340" stroke="#fbc2eb" stroke-width="2"/>
+
+  <!-- Arrows to Branches -->
+  <line x1="160" y1="340" x2="160" y2="380" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+  <line x1="330" y1="340" x2="330" y2="380" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+  <line x1="500" y1="340" x2="500" y2="380" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+  <line x1="670" y1="340" x2="670" y2="380" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+  <line x1="840" y1="340" x2="840" y2="380" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+
+  <!-- Branch 1: Room Management -->
+  <rect x="80" y="382" width="160" height="80" rx="12" fill="rgba(204,43,94,0.15)" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="160" y="415" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Manajemen</text>
+  <text x="160" y="435" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Kamar</text>
+  <text x="160" y="450" text-anchor="middle" fill="#fbc2eb" font-size="12">(CRUD)</text>
+
+  <!-- Branch 2: User Management -->
+  <rect x="250" y="382" width="160" height="80" rx="12" fill="rgba(204,43,94,0.15)" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="330" y="415" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Manajemen</text>
+  <text x="330" y="435" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">User</text>
+  <text x="330" y="450" text-anchor="middle" fill="#fbc2eb" font-size="12">(CRUD)</text>
+
+  <!-- Branch 3: Booking Management -->
+  <rect x="420" y="382" width="160" height="80" rx="12" fill="rgba(204,43,94,0.15)" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="500" y="410" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Manajemen</text>
+  <text x="500" y="430" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Booking</text>
+  <text x="500" y="448" text-anchor="middle" fill="#fbc2eb" font-size="11">(Approval</text>
+  <text x="500" y="459" text-anchor="middle" fill="#fbc2eb" font-size="11">Waiting List)</text>
+
+  <!-- Branch 4: Reports -->
+  <rect x="590" y="382" width="160" height="80" rx="12" fill="rgba(204,43,94,0.15)" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="670" y="415" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Laporan</text>
+  <text x="670" y="435" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Keuangan</text>
+  <text x="670" y="450" text-anchor="middle" fill="#fbc2eb" font-size="12">&amp; Okupansi</text>
+
+  <!-- Branch 5: CMS Management -->
+  <rect x="760" y="382" width="160" height="80" rx="12" fill="rgba(204,43,94,0.15)" stroke="url(#magentaGrad)" stroke-width="2" filter="url(#shadow)"/>
+  <text x="840" y="415" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">CMS</text>
+  <text x="840" y="435" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Management</text>
+  <text x="840" y="450" text-anchor="middle" fill="#fbc2eb" font-size="12">(Konten Web)</text>
+
+  <!-- Re-converge Line -->
+  <line x1="160" y1="462" x2="160" y2="520" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="330" y1="462" x2="330" y2="520" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="500" y1="462" x2="500" y2="520" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="670" y1="462" x2="670" y2="520" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="840" y1="462" x2="840" y2="520" stroke="#fbc2eb" stroke-width="2"/>
+  <line x1="160" y1="520" x2="840" y2="520" stroke="#fbc2eb" stroke-width="2"/>
+
+  <!-- Final Arrow to End -->
+  <line x1="500" y1="520" x2="500" y2="560" stroke="#fbc2eb" stroke-width="2" marker-end="url(#arrowMagenta)"/>
+
+  <!-- END -->
+  <ellipse cx="500" cy="588" rx="70" ry="28" fill="none" stroke="url(#purpleGrad)" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="500" y="594" text-anchor="middle" fill="#fbc2eb" font-size="16" font-weight="bold">SELESAI</text>
+
+  <text x="500" y="860" text-anchor="middle" fill="#666" font-size="11">© Hotel Nusantara Management System — Flowchart Alur Admin</text>
+</svg>

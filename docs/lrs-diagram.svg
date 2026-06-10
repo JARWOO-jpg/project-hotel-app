@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141e30"/>
+      <stop offset="100%" stop-color="#243b55"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#fff"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="850" fill="url(#bgGrad)"/>
+  
+  <text x="600" y="50" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold">Logical Record Structure (LRS)</text>
+  <text x="600" y="80" text-anchor="middle" fill="#ccc" font-size="16">Hotel Nusantara Database Schema</text>
+
+  <!-- USERS Table -->
+  <g transform="translate(100, 150)" filter="url(#shadow)">
+    <rect width="240" height="30" fill="#f6d365"/>
+    <rect y="30" width="240" height="230" fill="#2d2d44" stroke="#f6d365" stroke-width="1"/>
+    <text x="120" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">users</text>
+    
+    <rect y="30" width="240" height="25" fill="#3d3d5c"/>
+    <text x="10" y="48" fill="#f6d365" font-size="14" font-weight="bold">*</text>
+    <text x="30" y="48" fill="#fff" font-size="14">id</text>
+    
+    <text x="30" y="73" fill="#ddd" font-size="14">name</text>
+    <text x="30" y="98" fill="#ddd" font-size="14">email</text>
+    <text x="30" y="123" fill="#ddd" font-size="14">phone</text>
+    <text x="30" y="148" fill="#ddd" font-size="14">password</text>
+    <text x="30" y="173" fill="#ddd" font-size="14">role</text>
+    <text x="30" y="198" fill="#ddd" font-size="14">email_verified_at</text>
+    <text x="30" y="223" fill="#ddd" font-size="14">remember_token</text>
+    <text x="30" y="248" fill="#ddd" font-size="14">timestamps</text>
+  </g>
+
+  <!-- ROOMS Table -->
+  <g transform="translate(100, 430)" filter="url(#shadow)">
+    <rect width="240" height="30" fill="#00c6ff"/>
+    <rect y="30" width="240" height="255" fill="#2d2d44" stroke="#00c6ff" stroke-width="1"/>
+    <text x="120" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">rooms</text>
+    
+    <rect y="30" width="240" height="25" fill="#3d3d5c"/>
+    <text x="10" y="48" fill="#f6d365" font-size="14" font-weight="bold">*</text>
+    <text x="30" y="48" fill="#fff" font-size="14">id</text>
+    
+    <text x="30" y="73" fill="#ddd" font-size="14">room_number</text>
+    <text x="30" y="98" fill="#ddd" font-size="14">type</text>
+    <text x="30" y="123" fill="#ddd" font-size="14">price_per_night</text>
+    <text x="30" y="148" fill="#ddd" font-size="14">capacity</text>
+    <text x="30" y="173" fill="#ddd" font-size="14">description</text>
+    <text x="30" y="198" fill="#ddd" font-size="14">image</text>
+    <text x="30" y="223" fill="#ddd" font-size="14">status</text>
+    <text x="30" y="248" fill="#ddd" font-size="14">amenities</text>
+    <text x="30" y="273" fill="#ddd" font-size="14">timestamps</text>
+  </g>
+
+  <!-- BOOKINGS Table -->
+  <g transform="translate(480, 150)" filter="url(#shadow)">
+    <rect width="240" height="30" fill="#43e97b"/>
+    <rect y="30" width="240" height="480" fill="#2d2d44" stroke="#43e97b" stroke-width="1"/>
+    <text x="120" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">bookings</text>
+    
+    <rect y="30" width="240" height="25" fill="#3d3d5c"/>
+    <text x="10" y="48" fill="#f6d365" font-size="14" font-weight="bold">*</text>
+    <text x="30" y="48" fill="#fff" font-size="14">id</text>
+    
+    <text x="30" y="73" fill="#ddd" font-size="14">booking_code</text>
+    
+    <rect y="80" width="240" height="25" fill="#3d3d5c" opacity="0.5"/>
+    <text x="5" y="98" fill="#00c6ff" font-size="14" font-weight="bold">**</text>
+    <text x="30" y="98" fill="#fff" font-size="14">user_id</text>
+    
+    <rect y="105" width="240" height="25" fill="#3d3d5c" opacity="0.5"/>
+    <text x="5" y="123" fill="#00c6ff" font-size="14" font-weight="bold">**</text>
+    <text x="30" y="123" fill="#fff" font-size="14">room_id</text>
+
+    <text x="30" y="148" fill="#ddd" font-size="14">check_in_date</text>
+    <text x="30" y="173" fill="#ddd" font-size="14">check_out_date</text>
+    <text x="30" y="198" fill="#ddd" font-size="14">actual_check_in</text>
+    <text x="30" y="223" fill="#ddd" font-size="14">actual_check_out</text>
+    <text x="30" y="248" fill="#ddd" font-size="14">guests</text>
+    <text x="30" y="273" fill="#ddd" font-size="14">status</text>
+    <text x="30" y="298" fill="#ddd" font-size="14">payment_type</text>
+    <text x="30" y="323" fill="#ddd" font-size="14">total_price</text>
+    <text x="30" y="348" fill="#ddd" font-size="14">dp_amount</text>
+    <text x="30" y="373" fill="#ddd" font-size="14">paid_amount</text>
+    <text x="30" y="398" fill="#ddd" font-size="14">special_request</text>
+    <text x="30" y="423" fill="#ddd" font-size="14">cancellation_reason</text>
+    <text x="30" y="448" fill="#ddd" font-size="14">refund_amount</text>
+    <text x="30" y="473" fill="#ddd" font-size="14">timestamps</text>
+  </g>
+
+  <!-- TRANSACTIONS Table -->
+  <g transform="translate(860, 150)" filter="url(#shadow)">
+    <rect width="240" height="30" fill="#a18cd1"/>
+    <rect y="30" width="240" height="255" fill="#2d2d44" stroke="#a18cd1" stroke-width="1"/>
+    <text x="120" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">transactions</text>
+    
+    <rect y="30" width="240" height="25" fill="#3d3d5c"/>
+    <text x="10" y="48" fill="#f6d365" font-size="14" font-weight="bold">*</text>
+    <text x="30" y="48" fill="#fff" font-size="14">id</text>
+    
+    <text x="30" y="73" fill="#ddd" font-size="14">transaction_code</text>
+    
+    <rect y="80" width="240" height="25" fill="#3d3d5c" opacity="0.5"/>
+    <text x="5" y="98" fill="#00c6ff" font-size="14" font-weight="bold">**</text>
+    <text x="30" y="98" fill="#fff" font-size="14">booking_id</text>
+    
+    <text x="30" y="123" fill="#ddd" font-size="14">type</text>
+    <text x="30" y="148" fill="#ddd" font-size="14">amount</text>
+    <text x="30" y="173" fill="#ddd" font-size="14">payment_method</text>
+    <text x="30" y="198" fill="#ddd" font-size="14">status</text>
+    <text x="30" y="223" fill="#ddd" font-size="14">notes</text>
+    <text x="30" y="248" fill="#ddd" font-size="14">timestamps</text>
+  </g>
+
+  <!-- SERVICES Table -->
+  <g transform="translate(860, 440)" filter="url(#shadow)">
+    <rect width="240" height="30" fill="#fd8a3e"/>
+    <rect y="30" width="240" height="230" fill="#2d2d44" stroke="#fd8a3e" stroke-width="1"/>
+    <text x="120" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">services</text>
+    
+    <rect y="30" width="240" height="25" fill="#3d3d5c"/>
+    <text x="10" y="48" fill="#f6d365" font-size="14" font-weight="bold">*</text>
+    <text x="30" y="48" fill="#fff" font-size="14">id</text>
+    
+    <rect y="55" width="240" height="25" fill="#3d3d5c" opacity="0.5"/>
+    <text x="5" y="73" fill="#00c6ff" font-size="14" font-weight="bold">**</text>
+    <text x="30" y="73" fill="#fff" font-size="14">booking_id</text>
+    
+    <text x="30" y="98" fill="#ddd" font-size="14">service_type</text>
+    <text x="30" y="123" fill="#ddd" font-size="14">description</text>
+    <text x="30" y="148" fill="#ddd" font-size="14">amount</text>
+    <text x="30" y="173" fill="#ddd" font-size="14">quantity</text>
+    <text x="30" y="198" fill="#ddd" font-size="14">total</text>
+    <text x="30" y="223" fill="#ddd" font-size="14">status</text>
+    <text x="30" y="248" fill="#ddd" font-size="14">timestamps</text>
+  </g>
+
+  <!-- SITE SETTINGS Table -->
+  <g transform="translate(480, 680)" filter="url(#shadow)">
+    <rect width="240" height="30" fill="#f5576c"/>
+    <rect y="30" width="240" height="150" fill="#2d2d44" stroke="#f5576c" stroke-width="1"/>
+    <text x="120" y="20" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">site_settings</text>
+    
+    <rect y="30" width="240" height="25" fill="#3d3d5c"/>
+    <text x="10" y="48" fill="#f6d365" font-size="14" font-weight="bold">*</text>
+    <text x="30" y="48" fill="#fff" font-size="14">id</text>
+    
+    <text x="30" y="73" fill="#ddd" font-size="14">key</text>
+    <text x="30" y="98" fill="#ddd" font-size="14">group</text>
+    <text x="30" y="123" fill="#ddd" font-size="14">label</text>
+    <text x="30" y="148" fill="#ddd" font-size="14">value</text>
+    <text x="30" y="173" fill="#ddd" font-size="14">timestamps</text>
+  </g>
+
+  <!-- Lines representing Relationships -->
+  
+  <!-- users.id (y:150+48=198) TO bookings.user_id (y:150+98=248) -->
+  <path d="M 340 198 L 380 198 L 380 248 L 480 248" fill="none" stroke="#fff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="400" y="240" fill="#fff" font-size="14">1:M</text>
+
+  <!-- rooms.id (y:430+48=478) TO bookings.room_id (y:150+123=273) -->
+  <path d="M 340 478 L 420 478 L 420 273 L 480 273" fill="none" stroke="#fff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="430" y="295" fill="#fff" font-size="14">1:M</text>
+
+  <!-- bookings.id (y:150+48=198) TO transactions.booking_id (y:150+98=248) -->
+  <path d="M 720 198 L 810 198 L 810 248 L 860 248" fill="none" stroke="#fff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="750" y="190" fill="#fff" font-size="14">1:M</text>
+
+  <!-- bookings.id (y:150+48=198) TO services.booking_id (y:440+73=513) -->
+  <path d="M 720 198 L 780 198 L 780 513 L 860 513" fill="none" stroke="#fff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="790" y="505" fill="#fff" font-size="14">1:M</text>
+
+</svg>
