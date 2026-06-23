@@ -58,6 +58,12 @@
         @endif
 
         <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;justify-content:center">
+          @if($booking->status === 'pending')
+          <a href="{{ route('booking.payment', $booking->id) }}" class="btn-primary btn-sm"
+             style="background:linear-gradient(135deg,#00b140,#008000);border:none;display:flex;align-items:center;gap:0.5rem">
+            🔒 Selesaikan Pembayaran
+          </a>
+          @endif
           <a href="{{ route('booking.invoice', $booking->id) }}" class="btn-primary btn-sm">Lihat Invoice</a>
           @if(in_array($booking->status, ['pending', 'confirmed']))
           <form method="POST" action="{{ route('booking.cancel', $booking->id) }}" onsubmit="return confirm('Yakin ingin membatalkan booking ini?')">

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\AdminController;
 
@@ -41,7 +42,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/booking/{booking}/invoice', [BookingController::class, 'invoice'])->name('booking.invoice');
     Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('booking.my-bookings');
     Route::post('/booking/{booking}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
+
+    // ─── Midtrans Payment Routes ───────────────────────────────────────────
+    Route::get('/booking/{booking}/payment', [BookingController::class, 'payment'])->name('booking.payment');
+    Route::post('/booking/{booking}/snap-token', [MidtransController::class, 'createSnapToken'])->name('midtrans.snap-token');
+    Route::get('/booking/{booking}/payment/finish', [MidtransController::class, 'finish'])->name('booking.payment.finish');
+    Route::get('/booking/{booking}/payment/error', [MidtransController::class, 'error'])->name('booking.payment.error');
+    Route::get('/booking/{booking}/payment/pending', [MidtransController::class, 'pending'])->name('booking.payment.pending');
 });
+
+// ─── Midtrans Webhook (CSRF Exempt via BootstrapProviders) ────────────────────
+Route::post('/midtrans/notification', [MidtransController::class, 'notification'])->name('midtrans.notification');
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +68,7 @@ Route::middleware(['auth', 'role:receptionist,admin'])->prefix('receptionist')->
     Route::get('/check-out/{booking}', [ReceptionistController::class, 'checkOut'])->name('check-out');
     Route::post('/check-out/{booking}', [ReceptionistController::class, 'processCheckOut'])->name('process-check-out');
     Route::get('/guest-bill/{booking}', [ReceptionistController::class, 'guestBill'])->name('guest-bill');
+    Route::get('/invoice/{booking}', [ReceptionistController::class, 'invoice'])->name('invoice');
 });
 
 /*
@@ -74,6 +86,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/rooms/{room}/edit', [AdminController::class, 'editRoom'])->name('rooms.edit');
     Route::put('/rooms/{room}', [AdminController::class, 'updateRoom'])->name('rooms.update');
     Route::delete('/rooms/{room}', [AdminController::class, 'deleteRoom'])->name('rooms.delete');
+
+    // Facility CRUD
+    Route::get('/facilities', [AdminController::class, 'facilities'])->name('facilities');
+    Route::get('/facilities/create', [AdminController::class, 'createFacility'])->name('facilities.create');
+    Route::post('/facilities', [AdminController::class, 'storeFacility'])->name('facilities.store');
+    Route::get('/facilities/{facility}/edit', [AdminController::class, 'editFacility'])->name('facilities.edit');
+    Route::put('/facilities/{facility}', [AdminController::class, 'updateFacility'])->name('facilities.update');
+    Route::delete('/facilities/{facility}', [AdminController::class, 'deleteFacility'])->name('facilities.delete');
 
     // Booking Management
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');

@@ -13,6 +13,9 @@
   $promoDesc   = \App\Models\SiteSetting::getValue('promo_description', 'Nikmati penawaran terbatas.');
   $promoImg    = \App\Models\SiteSetting::getValue('promo_image');
   $promoLink   = \App\Models\SiteSetting::getValue('promo_link', '#');
+
+  $facilityTitle = \App\Models\SiteSetting::getValue('facility_title', 'Pengalaman Istimewa');
+  $facilitySub   = \App\Models\SiteSetting::getValue('facility_subtitle', 'Nikmati berbagai fasilitas premium yang kami sediakan untuk kenyamanan Anda selama menginap');
 @endphp
 <style>
 .hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:-5rem}
@@ -65,12 +68,33 @@
 .book-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:0.5rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.3s;text-decoration:none}
 .book-btn:hover{background:var(--gold);color:var(--dark)}
 
-.amenities-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
-.amenity-card{text-align:center;padding:2.5rem 1.5rem;border:1px solid rgba(201,169,110,0.1);transition:border-color 0.3s,background 0.3s}
-.amenity-card:hover{border-color:rgba(201,169,110,0.4);background:rgba(201,169,110,0.03)}
-.amenity-icon{font-size:2rem;margin-bottom:1.2rem;color:var(--gold)}
-.amenity-card h4{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--cream);margin-bottom:0.5rem}
-.amenity-card p{font-size:0.82rem;color:var(--text-muted);line-height:1.7}
+.amenities-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.amenity-card{border:1px solid rgba(201,169,110,0.1);transition:all 0.4s;cursor:pointer;overflow:hidden;background:var(--dark3);position:relative}
+.amenity-card:hover{border-color:rgba(201,169,110,0.5);transform:translateY(-6px);box-shadow:0 15px 40px rgba(0,0,0,0.4)}
+.amenity-card:hover .amenity-card-img img{transform:scale(1.08)}
+.amenity-card-img{width:100%;height:200px;overflow:hidden;position:relative}
+.amenity-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
+.amenity-card-icon{width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark2),var(--dark3));font-size:3rem}
+.amenity-card-body{padding:1.5rem;text-align:center}
+.amenity-card h4{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--cream);margin-bottom:0.5rem}
+.amenity-card p{font-size:0.8rem;color:var(--text-muted);line-height:1.7}
+.amenity-card-overlay{position:absolute;bottom:0;left:0;right:0;padding:0.5rem;background:linear-gradient(to top,rgba(15,14,12,0.8),transparent);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity 0.3s}
+.amenity-card:hover .amenity-card-overlay{opacity:1}
+.amenity-card-overlay span{font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+/* Facility Modal */
+.fac-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.35s;backdrop-filter:blur(8px)}
+.fac-modal-overlay.active{opacity:1;visibility:visible}
+.fac-modal{background:var(--dark2);border:1px solid rgba(201,169,110,0.25);width:90%;max-width:600px;max-height:90vh;overflow-y:auto;position:relative;transform:translateY(30px) scale(0.96);transition:all 0.4s ease;box-shadow:0 30px 60px rgba(0,0,0,0.5)}
+.fac-modal-overlay.active .fac-modal{transform:translateY(0) scale(1)}
+.fac-modal-close{position:absolute;top:1rem;right:1rem;background:rgba(15,14,12,0.7);border:1px solid var(--gold);color:var(--gold);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;font-size:1.2rem;transition:all 0.3s;backdrop-filter:blur(5px)}
+.fac-modal-close:hover{background:var(--gold);color:var(--dark)}
+.fac-modal-img{width:100%;height:320px;object-fit:cover;display:block}
+.fac-modal-icon{width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark3),var(--dark2));font-size:5rem}
+.fac-modal-body{padding:2rem 2rem 2.5rem}
+.fac-modal-tag{display:inline-block;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;border:1px solid rgba(201,169,110,0.3);padding:0.2rem 0.6rem}
+.fac-modal-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cream);line-height:1.2;margin-bottom:1rem}
+.fac-modal-desc{color:var(--text-muted);font-size:0.92rem;line-height:1.9}
+.fac-modal-divider{width:40px;height:1px;background:var(--gold);margin:1rem 0}
 
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
@@ -325,19 +349,74 @@
   </div>
 </section>
 
-<!-- AMENITIES -->
+<!-- AMENITIES / FASILITAS -->
 <section id="amenities">
   <div class="section-inner">
     <div class="section-header">
       <div class="section-tag">Fasilitas</div>
-      <h2 class="section-title">Pengalaman <em>Istimewa</em></h2>
+      @php
+        $parts = explode(' ', $facilityTitle, 2);
+      @endphp
+      <h2 class="section-title">{{ $parts[0] }} <em>{{ $parts[1] ?? '' }}</em></h2>
+      @if($facilitySub)
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.8rem;max-width:600px">{{ $facilitySub }}</p>
+      @endif
       <div class="section-line"></div>
     </div>
     <div class="amenities-grid">
-      <div class="amenity-card"><div class="amenity-icon">🏊</div><h4>Infinity Pool</h4><p>Kolam renang rooftop dengan pemandangan kota yang memukau</p></div>
-      <div class="amenity-card"><div class="amenity-icon">🍽️</div><h4>Fine Dining</h4><p>Restoran dengan menu Nusantara modern dan internasional</p></div>
-      <div class="amenity-card"><div class="amenity-icon">💆</div><h4>Spa & Wellness</h4><p>Perawatan tradisional Jawa dengan sentuhan modern</p></div>
-      <div class="amenity-card"><div class="amenity-icon">🏋️</div><h4>Fitness Center</h4><p>Pusat kebugaran 24 jam dengan peralatan premium</p></div>
+      @if(isset($facilities) && count($facilities) > 0)
+        @foreach($facilities as $f)
+        <div class="amenity-card" onclick="openFacilityModal('facModal-{{ $f->id }}')">
+          @if($f->image)
+            <div class="amenity-card-img">
+              <img src="{{ asset('storage/' . $f->image) }}" alt="{{ $f->name }}">
+              <div class="amenity-card-overlay"><span>Lihat Detail →</span></div>
+            </div>
+          @else
+            <div class="amenity-card-icon">{{ $f->icon ?? '🌟' }}</div>
+          @endif
+          <div class="amenity-card-body">
+            <h4>{{ $f->name }}</h4>
+            <p>{{ Str::limit($f->description, 70) }}</p>
+          </div>
+        </div>
+
+        {{-- Facility Pop-up Modal --}}
+        <div id="facModal-{{ $f->id }}" class="fac-modal-overlay" onclick="closeFacilityModal('facModal-{{ $f->id }}')">
+          <div class="fac-modal" onclick="event.stopPropagation()">
+            <button class="fac-modal-close" onclick="closeFacilityModal('facModal-{{ $f->id }}')">&times;</button>
+            @if($f->image)
+              <img src="{{ asset('storage/' . $f->image) }}" alt="{{ $f->name }}" class="fac-modal-img">
+            @else
+              <div class="fac-modal-icon">{{ $f->icon ?? '🌟' }}</div>
+            @endif
+            <div class="fac-modal-body">
+              <div class="fac-modal-tag">Fasilitas Hotel</div>
+              <h3 class="fac-modal-title">{{ $f->name }}</h3>
+              <div class="fac-modal-divider"></div>
+              <p class="fac-modal-desc">{{ $f->description }}</p>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      @else
+        <div class="amenity-card">
+          <div class="amenity-card-icon">🏊</div>
+          <div class="amenity-card-body"><h4>Infinity Pool</h4><p>Kolam renang rooftop dengan pemandangan kota yang memukau</p></div>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-card-icon">🍽️</div>
+          <div class="amenity-card-body"><h4>Fine Dining</h4><p>Restoran dengan menu Nusantara modern dan internasional</p></div>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-card-icon">💆</div>
+          <div class="amenity-card-body"><h4>Spa & Wellness</h4><p>Perawatan tradisional Jawa dengan sentuhan modern</p></div>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-card-icon">🏋️</div>
+          <div class="amenity-card-body"><h4>Fitness Center</h4><p>Pusat kebugaran 24 jam dengan peralatan premium</p></div>
+        </div>
+      @endif
     </div>
   </div>
 </section>
@@ -381,12 +460,20 @@
     document.getElementById(id).classList.remove('active');
     document.body.style.overflow = '';
   }
+
+  function openFacilityModal(id) {
+    var el = document.getElementById(id);
+    if(el) { el.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  }
+  function closeFacilityModal(id) {
+    var el = document.getElementById(id);
+    if(el) { el.classList.remove('active'); document.body.style.overflow = ''; }
+  }
   
   // Close modal when pressing ESC key
   document.addEventListener('keydown', function(event) {
     if (event.key === "Escape") {
-      const activeModals = document.querySelectorAll('.modal-overlay.active');
-      activeModals.forEach(function(modal) {
+      document.querySelectorAll('.modal-overlay.active, .fac-modal-overlay.active').forEach(function(modal) {
         modal.classList.remove('active');
         document.body.style.overflow = '';
       });

@@ -11,12 +11,18 @@ class Transaction extends Model
     protected $fillable = [
         'transaction_code', 'booking_id', 'type', 'amount',
         'payment_method', 'status', 'notes',
+        // Midtrans fields
+        'midtrans_order_id', 'snap_token', 'snap_redirect_url',
+        'payment_channel', 'va_number', 'fraud_status',
+        'midtrans_response', 'paid_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'amount' => 'decimal:2',
+            'amount'             => 'decimal:2',
+            'midtrans_response'  => 'array',
+            'paid_at'            => 'datetime',
         ];
     }
 

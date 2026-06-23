@@ -105,6 +105,8 @@ table tr:hover td{background:rgba(201,169,110,0.03)}
 .footer-links-group a{font-size:0.85rem;color:var(--text-muted);transition:color 0.3s;}
 .footer-links-group a:hover{color:var(--gold);}
 .footer-contact p{font-size:0.85rem;color:var(--text-muted);line-height:1.6;}
+.footer-contact a{color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+.footer-contact a:hover{color:var(--gold);}
 .footer-bottom{max-width:1100px;margin:2rem auto 0;display:flex;justify-content:space-between;align-items:center;}
 .footer-bottom p{font-size:0.75rem;color:var(--text-muted);}
 .footer-socials{display:flex;gap:1.5rem;}
@@ -145,7 +147,7 @@ table tr:hover td{background:rgba(201,169,110,0.03)}
         <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.*') ? 'active' : '' }}">Admin Panel</a></li>
       @endif
       @if(auth()->user()->isReceptionist() || auth()->user()->isAdmin())
-        <li><a href="{{ route('receptionist.dashboard') }}" class="{{ request()->routeIs('receptionist.*') ? 'active' : '' }}">Resepsionis</a></li>
+        <li><a href="{{ route('receptionist.dashboard') }}" class="{{ request()->routeIs('receptionist.*') ? 'active' : '' }}">Resepsionis Panel</a></li>
       @endif
       @if(auth()->user()->isGuest())
         <li><a href="{{ route('booking.my-bookings') }}" class="{{ request()->routeIs('booking.my-bookings') ? 'active' : '' }}">Booking Saya</a></li>
@@ -190,14 +192,18 @@ table tr:hover td{background:rgba(201,169,110,0.03)}
 
 @php
   $footerAddress   = \App\Models\SiteSetting::getValue('footer_address', 'Jl. Jenderal Sudirman No. 123, Bandung, Jawa Barat 40111');
-  $footerPhone     = \App\Models\SiteSetting::getValue('footer_phone', '+62 22 1234 5678');
+  $footerWhatsapp  = \App\Models\SiteSetting::getValue('footer_whatsapp', '+62 812 3456 7890');
   $footerEmail     = \App\Models\SiteSetting::getValue('footer_email', 'info@hotelnusantara.com');
   $footerCopyright = \App\Models\SiteSetting::getValue('footer_copyright', '© ' . date('Y') . ' Hotel Nusantara. All rights reserved.');
+  $footerMapsUrl   = \App\Models\SiteSetting::getValue('footer_maps_url', 'https://maps.google.com');
   $socialIg        = \App\Models\SiteSetting::getValue('social_instagram', '#');
-  $socialFb        = \App\Models\SiteSetting::getValue('social_facebook', '#');
-  $socialTw        = \App\Models\SiteSetting::getValue('social_twitter', '#');
-  $socialTiktok    = \App\Models\SiteSetting::getValue('social_tiktok', '');
-  $socialYoutube   = \App\Models\SiteSetting::getValue('social_youtube', '');
+  $socialTiktok    = \App\Models\SiteSetting::getValue('social_tiktok', '#');
+  $socialYoutube   = \App\Models\SiteSetting::getValue('social_youtube', '#');
+  
+  $waNumber = preg_replace('/[^0-9]/', '', $footerWhatsapp);
+  if (str_starts_with($waNumber, '0')) {
+      $waNumber = '62' . substr($waNumber, 1);
+  }
 @endphp
 <footer class="main-footer">
   <div class="footer-inner">
@@ -217,16 +223,14 @@ table tr:hover td{background:rgba(201,169,110,0.03)}
     </div>
     <div class="footer-contact">
       <h4>Hubungi Kami</h4>
-      <p>{!! nl2br(e($footerAddress)) !!}</p>
-      <p style="margin-top:0.8rem">Telepon: {{ $footerPhone }}<br>Email: {{ $footerEmail }}</p>
+      <p><a href="{{ $footerMapsUrl }}" target="_blank">{!! nl2br(e($footerAddress)) !!}</a></p>
+      <p style="margin-top:0.8rem">WhatsApp: <a href="https://wa.me/{{ $waNumber }}" target="_blank">{{ $footerWhatsapp }}</a><br>Email: <a href="mailto:{{ $footerEmail }}">{{ $footerEmail }}</a></p>
     </div>
   </div>
   <div class="footer-bottom">
     <p>{{ $footerCopyright }}</p>
     <div class="footer-socials">
       @if($socialIg)<a href="{{ $socialIg }}">Instagram</a>@endif
-      @if($socialFb)<a href="{{ $socialFb }}">Facebook</a>@endif
-      @if($socialTw)<a href="{{ $socialTw }}">Twitter</a>@endif
       @if($socialTiktok)<a href="{{ $socialTiktok }}">TikTok</a>@endif
       @if($socialYoutube)<a href="{{ $socialYoutube }}">YouTube</a>@endif
     </div>

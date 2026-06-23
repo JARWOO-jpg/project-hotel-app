@@ -13,27 +13,39 @@ class ReceptionistController extends Controller
 {
     public function dashboard()
     {
-        $todayCheckIns = Booking::where('check_in_date', today())
-            ->where('status', 'confirmed')
-            ->with(['user', 'room'])
+        // BUG FIX: Tampilkan juga booking yang tanggal check-in nya sudah lewat
+        // tapi belum pernah di-check-in (overdue), agar resepsionis bisa menangani
+        $todayCheckIns = Booking::where('check_in_date', '<=', today())
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->with(['user', 'room', 'transactions'])
+            ->orderBy('check_in_date', 'asc')
             ->get();
 
-        $todayCheckOuts = Booking::where('check_out_date', today())
+        $todayCheckOuts = Booking::where('check_out_date', '<=', today())
             ->where('status', 'checked_in')
-            ->with(['user', 'room'])
+            ->with(['user', 'room', 'services', 'transactions'])
+            ->orderBy('check_out_date', 'asc')
             ->get();
 
         $currentGuests = Booking::where('status', 'checked_in')
-            ->with(['user', 'room'])
+            ->with(['user', 'room', 'services', 'transactions'])
+            ->orderBy('check_out_date', 'asc')
             ->get();
 
         $rooms = Room::all();
         $occupiedRooms = Room::where('status', 'occupied')->count();
         $availableRooms = Room::where('status', 'available')->count();
 
+        // Riwayat tamu yang sudah check-out hari ini
+        $todayCheckedOut = Booking::where('status', 'checked_out')
+            ->whereDate('actual_check_out', today())
+            ->with(['user', 'room', 'services', 'transactions'])
+            ->orderBy('actual_check_out', 'desc')
+            ->get();
+
         return view('receptionist.dashboard', compact(
             'todayCheckIns', 'todayCheckOuts', 'currentGuests',
-            'rooms', 'occupiedRooms', 'availableRooms'
+            'rooms', 'occupiedRooms', 'availableRooms', 'todayCheckedOut'
         ));
     }
 
@@ -61,7 +73,16 @@ class ReceptionistController extends Controller
     {
         $booking->load(['user', 'room', 'transactions']);
 
-        return view('receptionist.check-in', compact('booking'));
+        // Ambil daftar kamar tersedia untuk di-assign
+        // BUG FIX: Gunakan tipe kamar dari booking yang asli agar resepsionis 
+        // tidak salah assign kamar dengan tipe yang berbeda.
+        $type = $booking->room ? $booking->room->type : null;
+        $availableRooms = Room::where('status', 'available')
+            ->when($type, function($query, $type) {
+                return $query->where('type', $type);
+            })->get();
+
+        return view('receptionist.check-in', compact('booking', 'availableRooms'));
     }
 
     public function processCheckIn(Request $request, Booking $booking)
@@ -75,6 +96,7 @@ class ReceptionistController extends Controller
             return back()->with('error', 'Status booking tidak valid untuk check-in. Status saat ini: ' . $booking->getStatusLabel());
         }
 
+        // BUG FIX: Hapus validasi identity_photo — verifikasi identitas dilakukan manual
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
         ]);
@@ -95,11 +117,16 @@ class ReceptionistController extends Controller
         $room->update(['status' => 'occupied']);
 
         return redirect()->route('receptionist.dashboard')
-            ->with('success', 'Check-in berhasil! Kamar ' . $room->room_number . ' telah di-assign untuk ' . $booking->user->name);
+            ->with('success', '✅ Check-in berhasil! Kamar ' . $room->room_number . ' telah di-assign untuk ' . $booking->user->name);
     }
 
     public function addService(Request $request, Booking $booking)
     {
+        // BUG FIX: Pastikan booking memang sedang checked_in
+        if ($booking->status !== 'checked_in') {
+            return back()->with('error', 'Layanan hanya dapat ditambahkan saat tamu sedang menginap (status checked-in).');
+        }
+
         $request->validate([
             'service_type' => 'required|in:room_service,laundry,spa,transport,other',
             'description' => 'required|string|max:255',
@@ -152,6 +179,7 @@ class ReceptionistController extends Controller
         $totalBill = $booking->total_price + $servicesTotal;
         $remaining = $totalBill - $booking->paid_amount;
 
+        // BUG FIX: Hanya buat transaksi pelunasan jika memang ada sisa
         if ($remaining > 0) {
             Transaction::create([
                 'booking_id' => $booking->id,
@@ -166,7 +194,10 @@ class ReceptionistController extends Controller
         $booking->update([
             'status' => 'checked_out',
             'actual_check_out' => Carbon::now(),
-            'paid_amount' => $totalBill,
+            // BUG FIX: Hanya ubah paid_amount jadi $totalBill jika ada kekurangan bayar (remaining > 0)
+            // yang baru saja dilunasi. Jika ada kelebihan bayar (remaining < 0), jangan ubah
+            // paid_amount agar riwayat total pembayaran tamu tidak hilang.
+            'paid_amount' => $remaining > 0 ? $totalBill : $booking->paid_amount,
         ]);
 
         // Release room
@@ -174,8 +205,8 @@ class ReceptionistController extends Controller
             $booking->room->update(['status' => 'available']);
         }
 
-        return redirect()->route('booking.invoice', $booking->id)
-            ->with('success', 'Check-out berhasil! Invoice final telah dibuat.');
+        return redirect()->route('receptionist.invoice', $booking->id)
+            ->with('success', '✅ Check-out berhasil! Invoice final telah dibuat.');
     }
 
     public function guestBill(Booking $booking)
@@ -183,5 +214,16 @@ class ReceptionistController extends Controller
         $booking->load(['user', 'room', 'services', 'transactions']);
 
         return view('receptionist.guest-bill', compact('booking'));
+    }
+
+    /**
+     * Invoice yang diakses langsung oleh resepsionis setelah check-out.
+     * BUG FIX: Resepsionis harus bisa akses invoice tanpa masalah 403.
+     */
+    public function invoice(Booking $booking)
+    {
+        $booking->load(['room', 'user', 'transactions', 'services']);
+
+        return view('guest.invoice', compact('booking'));
     }
 }

@@ -11,7 +11,7 @@ class Booking extends Model
 {
     protected $fillable = [
         'booking_code', 'user_id', 'room_id', 'check_in_date', 'check_out_date',
-        'actual_check_in', 'actual_check_out', 'guests', 'status', 'payment_type',
+        'actual_check_in', 'actual_check_out', 'guests', 'status', 'identity_photo', 'payment_type',
         'total_price', 'dp_amount', 'paid_amount', 'special_request',
         'cancellation_reason', 'refund_amount',
     ];

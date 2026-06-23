@@ -22,7 +22,6 @@ class SiteSettingSeeder extends Seeder
 
             // ── Footer ──
             ['key' => 'footer_address', 'group' => 'footer', 'label' => 'Alamat Hotel', 'type' => 'textarea', 'value' => 'Jl. Jenderal Sudirman No. 123, Bandung, Jawa Barat 40111'],
-            ['key' => 'footer_phone', 'group' => 'footer', 'label' => 'Nomor Telepon', 'type' => 'text', 'value' => '+62 22 1234 5678'],
             ['key' => 'footer_email', 'group' => 'footer', 'label' => 'Email Resmi', 'type' => 'text', 'value' => 'info@hotelnusantara.com'],
             ['key' => 'footer_whatsapp', 'group' => 'footer', 'label' => 'Nomor WhatsApp', 'type' => 'text', 'value' => '+62 812 3456 7890'],
             ['key' => 'footer_maps_url', 'group' => 'footer', 'label' => 'Link Google Maps', 'type' => 'url', 'value' => 'https://maps.google.com'],
@@ -30,10 +29,8 @@ class SiteSettingSeeder extends Seeder
 
             // ── Sosial Media ──
             ['key' => 'social_instagram', 'group' => 'social', 'label' => 'Link Instagram', 'type' => 'url', 'value' => '#'],
-            ['key' => 'social_facebook', 'group' => 'social', 'label' => 'Link Facebook', 'type' => 'url', 'value' => '#'],
-            ['key' => 'social_twitter', 'group' => 'social', 'label' => 'Link Twitter/X', 'type' => 'url', 'value' => '#'],
-            ['key' => 'social_tiktok', 'group' => 'social', 'label' => 'Link TikTok', 'type' => 'url', 'value' => ''],
-            ['key' => 'social_youtube', 'group' => 'social', 'label' => 'Link YouTube', 'type' => 'url', 'value' => ''],
+            ['key' => 'social_tiktok', 'group' => 'social', 'label' => 'Link TikTok', 'type' => 'url', 'value' => '#'],
+            ['key' => 'social_youtube', 'group' => 'social', 'label' => 'Link YouTube', 'type' => 'url', 'value' => '#'],
 
             // ── Promo / Banner ──
             ['key' => 'promo_active', 'group' => 'promo', 'label' => 'Aktifkan Banner Promo?', 'type' => 'text', 'value' => '0'],
@@ -41,6 +38,10 @@ class SiteSettingSeeder extends Seeder
             ['key' => 'promo_description', 'group' => 'promo', 'label' => 'Deskripsi Promo', 'type' => 'textarea', 'value' => 'Nikmati diskon spesial untuk pemesanan bulan ini.'],
             ['key' => 'promo_image', 'group' => 'promo', 'label' => 'Gambar Banner Promo', 'type' => 'image', 'value' => null],
             ['key' => 'promo_link', 'group' => 'promo', 'label' => 'Link Tujuan Promo', 'type' => 'url', 'value' => ''],
+
+            // ── Fasilitas Section ──
+            ['key' => 'facility_title', 'group' => 'facility', 'label' => 'Judul Seksi Fasilitas', 'type' => 'text', 'value' => 'Pengalaman Istimewa'],
+            ['key' => 'facility_subtitle', 'group' => 'facility', 'label' => 'Sub-Judul Seksi Fasilitas', 'type' => 'textarea', 'value' => 'Nikmati berbagai fasilitas premium yang kami sediakan untuk kenyamanan Anda selama menginap'],
         ];
 
         foreach ($settings as $s) {

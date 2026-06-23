@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\Transaction;
+use App\Services\MidtransService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -26,75 +29,97 @@ class BookingController extends Controller
         return view('guest.booking', compact('room', 'checkIn', 'checkOut', 'guests', 'nights', 'totalPrice'));
     }
 
+    /**
+     * Store booking dengan DB::transaction() + Pessimistic Locking.
+     *
+     * Alur:
+     * 1. Validasi input
+     * 2. Mulai database transaction
+     * 3. Cek ketersediaan kamar dengan lockForUpdate() (mencegah race condition)
+     * 4. Jika tersedia → buat booking 'pending'
+     * 5. Jika tidak tersedia → rollback & return error 409
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'check_in' => 'required|date|after_or_equal:today',
-            'check_out' => 'required|date|after:check_in',
-            'guests' => 'required|integer|min:1',
-            'payment_type' => 'required|in:full,dp',
-            'payment_method' => 'required|in:cash,transfer,credit_card,e_wallet',
+            'room_id'      => 'required|exists:rooms,id',
+            'check_in'     => 'required|date|after_or_equal:today',
+            'check_out'    => 'required|date|after:check_in',
+            'guests'         => 'required|integer|min:1',
+            'payment_type'   => 'required|in:full,dp',
+            'identity_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Handle photo upload SEBELUM transaction (filesystem I/O diluar DB lock)
+        $identityPhotoPath = null;
+        if ($request->hasFile('identity_photo')) {
+            $identityPhotoPath = $request->file('identity_photo')->store('identity_photos', 'public');
+        }
 
         $room = Room::findOrFail($request->room_id);
 
-        // Overbooking check
-        if (!$room->isAvailableForDates($request->check_in, $request->check_out)) {
-            // Check waiting list option
-            if ($request->accept_waiting_list) {
-                $booking = Booking::create([
-                    'user_id' => auth()->id(),
-                    'room_id' => $room->id,
-                    'check_in_date' => $request->check_in,
-                    'check_out_date' => $request->check_out,
-                    'guests' => $request->guests,
-                    'status' => 'waiting_list',
-                    'payment_type' => $request->payment_type,
-                    'total_price' => $room->price_per_night * ((strtotime($request->check_out) - strtotime($request->check_in)) / 86400),
-                    'special_request' => $request->special_request,
-                ]);
+        try {
+            $booking = DB::transaction(function () use ($request, $room, $identityPhotoPath) {
 
-                return redirect()->route('booking.status', $booking->id)
-                    ->with('info', 'Anda masuk ke Waiting List. Kami akan menghubungi Anda jika kamar tersedia.');
+                // ══════════════════════════════════════════════════════════════
+                // PESSIMISTIC LOCK: Cek ketersediaan dengan lockForUpdate()
+                // Ini mengunci row booking terkait kamar ini sehingga
+                // request lain yang bersamaan harus MENUNGGU sampai
+                // transaksi ini selesai (commit/rollback).
+                // ══════════════════════════════════════════════════════════════
+                $isAvailable = $room->isAvailableForDatesLocked(
+                    $request->check_in,
+                    $request->check_out
+                );
+
+                if (!$isAvailable) {
+                    // Throw exception agar DB::transaction() otomatis rollback
+                    throw new \App\Exceptions\RoomUnavailableException(
+                        'Kamar sudah tidak tersedia untuk tanggal yang dipilih.'
+                    );
+                }
+
+                $nights     = (int) (strtotime($request->check_out) - strtotime($request->check_in)) / 86400;
+                $totalPrice = $room->price_per_night * $nights;
+                $dpAmount   = $request->payment_type === 'dp' ? $totalPrice * 0.5 : 0;
+
+                // Buat booking dengan status 'pending'
+                return Booking::create([
+                    'user_id'        => auth()->id(),
+                    'room_id'        => $room->id,
+                    'check_in_date'  => $request->check_in,
+                    'check_out_date' => $request->check_out,
+                    'guests'         => $request->guests,
+                    'status'         => 'pending',
+                    'payment_type'   => $request->payment_type,
+                    'total_price'    => $totalPrice,
+                    'dp_amount'      => $dpAmount,
+                    'paid_amount'    => 0,
+                    'identity_photo' => $identityPhotoPath,
+                    'special_request'=> $request->special_request,
+                ]);
+            });
+
+            // Sukses → redirect ke halaman pembayaran Midtrans
+            return redirect()->route('booking.payment', $booking->id)
+                ->with('info', '🏨 Booking berhasil dibuat! Selesaikan pembayaran dalam 15 menit.');
+
+        } catch (\App\Exceptions\RoomUnavailableException $e) {
+            // Hapus foto yang sudah di-upload jika booking gagal
+            if ($identityPhotoPath) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($identityPhotoPath);
             }
 
-            return back()->with('error', 'Maaf, kamar sudah penuh. Silakan pilih tanggal atau tipe kamar lain.');
+            // Jika request AJAX → return JSON 409
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => $e->getMessage(),
+                    'type'  => 'room_unavailable',
+                ], 409);
+            }
+
+            return back()->with('error', $e->getMessage());
         }
-
-        $nights = (int) (strtotime($request->check_out) - strtotime($request->check_in)) / 86400;
-        $totalPrice = $room->price_per_night * $nights;
-        $dpAmount = $request->payment_type === 'dp' ? $totalPrice * 0.5 : 0;
-        $paidAmount = $request->payment_type === 'dp' ? $dpAmount : $totalPrice;
-
-        $booking = Booking::create([
-            'user_id' => auth()->id(),
-            'room_id' => $room->id,
-            'check_in_date' => $request->check_in,
-            'check_out_date' => $request->check_out,
-            'guests' => $request->guests,
-            'status' => 'confirmed',
-            'payment_type' => $request->payment_type,
-            'total_price' => $totalPrice,
-            'dp_amount' => $dpAmount,
-            'paid_amount' => $paidAmount,
-            'special_request' => $request->special_request,
-        ]);
-
-        // Create transaction
-        Transaction::create([
-            'booking_id' => $booking->id,
-            'type' => $request->payment_type === 'dp' ? 'dp_payment' : 'payment',
-            'amount' => $paidAmount,
-            'payment_method' => $request->payment_method,
-            'status' => 'success',
-            'notes' => $request->payment_type === 'dp'
-                ? 'Down Payment 50% dari total Rp ' . number_format($totalPrice, 0, ',', '.')
-                : 'Pembayaran lunas',
-        ]);
-
-        return redirect()->route('booking.status', $booking->id)
-            ->with('success', 'Booking berhasil! Status: Terkonfirmasi.');
     }
 
     public function status(Booking $booking)
@@ -106,7 +131,47 @@ class BookingController extends Controller
 
         $booking->load(['room', 'transactions', 'services']);
 
+        // BUG FIX: Sinkronisasi manual status transaksi dengan Midtrans
+        // Karena di localhost webhook tidak bisa masuk, kita cek status secara proaktif
+        // setiap kali user membuka halaman status booking.
+        $transaction = $booking->transactions()->where('payment_method', 'midtrans')->where('status', 'pending')->latest()->first();
+        if ($transaction && $transaction->midtrans_order_id) {
+            try {
+                $statusResp = \Midtrans\Transaction::status($transaction->midtrans_order_id);
+                app(\App\Services\MidtransService::class)->handleNotification((array) $statusResp);
+                
+                // Refresh data setelah diupdate
+                $booking->refresh();
+                $booking->load(['room', 'transactions', 'services']);
+            } catch (\Exception $e) {
+                // Abaikan jika error (misal order belum ada di midtrans)
+            }
+        }
+
         return view('guest.booking-status', compact('booking'));
+    }
+
+    /**
+     * Halaman pembayaran Midtrans Snap.
+     */
+    public function payment(Booking $booking)
+    {
+        if ($booking->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+            return redirect()->route('booking.status', $booking->id)
+                ->with('info', 'Booking ini sudah dalam status ' . $booking->getStatusLabel());
+        }
+
+        $booking->load(['room', 'user']);
+
+        $payAmount = $booking->payment_type === 'dp'
+            ? (float) $booking->dp_amount
+            : (float) ($booking->total_price - $booking->paid_amount);
+
+        return view('guest.payment', compact('booking', 'payAmount'));
     }
 
     public function myBookings()

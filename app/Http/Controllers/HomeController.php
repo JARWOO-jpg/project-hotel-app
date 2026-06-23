@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use App\Models\Booking;
+use App\Models\Facility;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,8 +14,22 @@ class HomeController extends Controller
         $rooms = Room::where('status', '!=', 'maintenance')
             ->orderBy('price_per_night')
             ->get();
+        $facilities = Facility::all();
+        
+        if ($facilities->isEmpty()) {
+            $defaultFacilities = [
+                ['name' => 'Infinity Pool', 'icon' => '🏊', 'description' => 'Kolam renang rooftop dengan pemandangan kota yang memukau'],
+                ['name' => 'Fine Dining', 'icon' => '🍽️', 'description' => 'Restoran dengan menu Nusantara modern dan internasional'],
+                ['name' => 'Spa & Wellness', 'icon' => '💆', 'description' => 'Perawatan tradisional Jawa dengan sentuhan modern'],
+                ['name' => 'Fitness Center', 'icon' => '🏋️', 'description' => 'Pusat kebugaran 24 jam dengan peralatan premium'],
+            ];
+            foreach ($defaultFacilities as $df) {
+                Facility::create($df);
+            }
+            $facilities = Facility::all();
+        }
 
-        return view('guest.home', compact('rooms'));
+        return view('guest.home', compact('rooms', 'facilities'));
     }
 
     public function checkAvailability(Request $request)
@@ -70,6 +85,7 @@ class HomeController extends Controller
             'checkIn' => $request->check_in,
             'checkOut' => $request->check_out,
             'roomType' => $request->room_type,
+            'facilities' => Facility::all(),
         ]);
     }
 

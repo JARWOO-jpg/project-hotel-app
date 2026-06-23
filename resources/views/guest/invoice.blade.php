@@ -106,7 +106,11 @@
 
     <div class="no-print" style="text-align:center;margin-top:2rem;display:flex;gap:1rem;justify-content:center">
       <button onclick="window.print()" class="btn-primary btn-sm">🖨️ Cetak Invoice</button>
-      <a href="{{ route('booking.my-bookings') }}" class="btn-outline btn-sm">Kembali</a>
+      @if(auth()->check() && (auth()->user()->isReceptionist() || auth()->user()->isAdmin()))
+        <a href="{{ route('receptionist.dashboard') }}" class="btn-outline btn-sm">Kembali ke Dashboard</a>
+      @else
+        <a href="{{ route('booking.my-bookings') }}" class="btn-outline btn-sm">Kembali</a>
+      @endif
     </div>
   </div>
 </section>

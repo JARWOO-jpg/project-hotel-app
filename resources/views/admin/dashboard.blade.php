@@ -30,6 +30,7 @@
     <div class="admin-nav">
       <a href="{{ route('admin.dashboard') }}" class="active">Dashboard</a>
       <a href="{{ route('admin.rooms') }}">Kamar</a>
+      <a href="{{ route('admin.facilities') }}">Fasilitas</a>
       <a href="{{ route('admin.bookings') }}">Booking</a>
       <a href="{{ route('admin.users') }}">Pengguna</a>
       <a href="{{ route('admin.reports') }}">Laporan</a>
@@ -87,6 +88,39 @@
         </div>
         @endif
       </div>
+    </div>
+
+    <!-- Riwayat Check-Out Hari Ini -->
+    <div class="card" style="margin-bottom:2rem">
+      <h3 style="color:var(--cream);font-size:1.2rem;margin-bottom:1rem">✅ Riwayat Check-Out Hari Ini @if($todayCheckedOut->count() > 0)<span style="background:var(--gold);color:var(--dark);font-size:0.7rem;padding:0.15rem 0.5rem;margin-left:0.5rem;vertical-align:middle;font-family:'DM Sans',sans-serif">{{ $todayCheckedOut->count() }}</span>@endif</h3>
+      @if($todayCheckedOut->count() > 0)
+      <div class="table-wrap"><table>
+        <thead><tr><th>Kode</th><th>Tamu</th><th>Kamar</th><th>Periode</th><th>Jam C/O</th><th>Total Tagihan</th><th>Dibayar</th><th>Aksi</th></tr></thead>
+        <tbody>
+          @foreach($todayCheckedOut as $b)
+          @php
+            $servicesTotal = $b->getServicesTotal();
+            $totalBill = $b->total_price + $servicesTotal;
+          @endphp
+          <tr>
+            <td style="color:var(--gold)">{{ $b->booking_code }}</td>
+            <td style="color:var(--cream)">{{ $b->user->name }}</td>
+            <td>{{ $b->room ? $b->room->room_number : '-' }}</td>
+            <td>{{ $b->check_in_date->format('d/m') }} - {{ $b->check_out_date->format('d/m') }}</td>
+            <td>{{ $b->actual_check_out ? $b->actual_check_out->format('H:i') : '-' }}</td>
+            <td>Rp {{ number_format($totalBill, 0, ',', '.') }}</td>
+            <td>Rp {{ number_format($b->paid_amount, 0, ',', '.') }}</td>
+            <td><a href="{{ route('admin.bookings') }}?search={{ $b->booking_code }}" class="btn-outline btn-sm" style="padding:0.25rem 0.6rem;font-size:0.7rem">Detail</a></td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table></div>
+      @else
+      <div style="text-align:center;padding:1.5rem;border:1px dashed rgba(201,169,110,0.15)">
+        <div style="font-size:2rem;margin-bottom:0.5rem;opacity:0.5">✅</div>
+        <p style="color:var(--text-muted);font-size:0.85rem">Belum ada tamu yang check-out hari ini.</p>
+      </div>
+      @endif
     </div>
 
     <div class="card">

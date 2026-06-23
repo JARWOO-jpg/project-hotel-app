@@ -14,7 +14,7 @@
       @csrf
       <div class="form-group">
         <label>Email</label>
-        <input type="email" name="email" value="{{ old('email') }}" required autofocus>
+        <input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="off">
       </div>
       <div class="form-group">
         <label>Password</label>

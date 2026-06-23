@@ -55,14 +55,38 @@ class Room extends Model
     }
 
     /**
-     * Check if room is available for specific dates
+     * Check if room is available for specific dates.
+     *
+     * FIX DOUBLE BOOKING: Status 'pending' sekarang juga dianggap TIDAK tersedia.
+     * Booking pending akan otomatis di-cancel oleh Cron Job jika tidak dibayar
+     * dalam 15 menit, sehingga kamar kembali tersedia.
      */
     public function isAvailableForDates($checkIn, $checkOut): bool
     {
         if ($this->status === 'maintenance') return false;
 
         return !$this->bookings()
-            ->whereIn('status', ['confirmed', 'checked_in'])
+            ->whereIn('status', ['pending', 'confirmed', 'checked_in'])
+            ->where(function ($q) use ($checkIn, $checkOut) {
+                $q->where(function ($q2) use ($checkIn, $checkOut) {
+                    $q2->where('check_in_date', '<', $checkOut)
+                        ->where('check_out_date', '>', $checkIn);
+                });
+            })->exists();
+    }
+
+    /**
+     * Sama seperti isAvailableForDates tapi menggunakan Pessimistic Locking.
+     * Digunakan di dalam DB::transaction() saat proses store booking
+     * untuk mencegah Race Condition.
+     */
+    public function isAvailableForDatesLocked($checkIn, $checkOut): bool
+    {
+        if ($this->status === 'maintenance') return false;
+
+        return !$this->bookings()
+            ->lockForUpdate()
+            ->whereIn('status', ['pending', 'confirmed', 'checked_in'])
             ->where(function ($q) use ($checkIn, $checkOut) {
                 $q->where(function ($q2) use ($checkIn, $checkOut) {
                     $q2->where('check_in_date', '<', $checkOut)

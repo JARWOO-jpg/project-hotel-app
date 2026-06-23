@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\Facility;
 
 class AdminController extends Controller
 {
@@ -27,7 +28,7 @@ class AdminController extends Controller
             ->sum('amount');
 
         $totalBookings = Booking::count();
-        $activeBookings = Booking::whereIn('status', ['confirmed', 'checked_in'])->count();
+        $activeBookings = Booking::whereIn('status', ['pending', 'confirmed'])->count();
         $totalRooms = Room::count();
         $occupiedRooms = Room::where('status', 'occupied')->count();
         $availableRooms = Room::where('status', 'available')->count();
@@ -68,10 +69,18 @@ class AdminController extends Controller
             ->with(['user', 'room'])
             ->get();
 
+        // Riwayat tamu yang sudah check-out hari ini
+        $todayCheckedOut = Booking::where('status', 'checked_out')
+            ->whereDate('actual_check_out', today())
+            ->with(['user', 'room', 'services', 'transactions'])
+            ->orderBy('actual_check_out', 'desc')
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalRevenue', 'monthlyRevenue', 'totalBookings', 'activeBookings',
             'totalRooms', 'occupiedRooms', 'availableRooms', 'occupancyRate',
-            'revenueChart', 'roomStats', 'recentBookings', 'guestStats', 'waitingList'
+            'revenueChart', 'roomStats', 'recentBookings', 'guestStats', 'waitingList',
+            'todayCheckedOut'
         ));
     }
 
@@ -155,6 +164,75 @@ class AdminController extends Controller
 
         $room->delete();
         return redirect()->route('admin.rooms')->with('success', 'Kamar berhasil dihapus.');
+    }
+
+    // ─── Facility Management ─────────────────────────────
+    public function facilities()
+    {
+        $facilities = Facility::all();
+        return view('admin.facilities.index', compact('facilities'));
+    }
+
+    public function createFacility()
+    {
+        return view('admin.facilities.form');
+    }
+
+    public function storeFacility(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->only(['name', 'icon', 'description']);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('facilities', 'public');
+        }
+
+        Facility::create($data);
+
+        return redirect()->route('admin.facilities')->with('success', 'Fasilitas berhasil ditambahkan.');
+    }
+
+    public function editFacility(Facility $facility)
+    {
+        return view('admin.facilities.form', compact('facility'));
+    }
+
+    public function updateFacility(Request $request, Facility $facility)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->only(['name', 'icon', 'description']);
+
+        if ($request->hasFile('image')) {
+            if ($facility->image) {
+                Storage::disk('public')->delete($facility->image);
+            }
+            $data['image'] = $request->file('image')->store('facilities', 'public');
+        }
+
+        $facility->update($data);
+
+        return redirect()->route('admin.facilities')->with('success', 'Fasilitas berhasil diperbarui.');
+    }
+
+    public function deleteFacility(Facility $facility)
+    {
+        if ($facility->image) {
+            Storage::disk('public')->delete($facility->image);
+        }
+        $facility->delete();
+        return redirect()->route('admin.facilities')->with('success', 'Fasilitas berhasil dihapus.');
     }
 
     // ─── Booking Management ──────────────────────────
@@ -322,18 +400,31 @@ class AdminController extends Controller
     public function cms()
     {
         $groups = [
-            'hero'   => ['title' => 'Visual & Teks Halaman Depan',   'icon' => '🖼️', 'desc' => 'Hero image, judul, dan deskripsi hotel'],
-            'footer' => ['title' => 'Footer & Informasi Kontak',      'icon' => '📍', 'desc' => 'Alamat, telepon, email, dan hak cipta'],
-            'social' => ['title' => 'Tautan Media Sosial',            'icon' => '🔗', 'desc' => 'Instagram, Facebook, TikTok, YouTube'],
-            'promo'  => ['title' => 'Kampanye & Banner Promo',        'icon' => '📣', 'desc' => 'Banner promosi dan event spesial'],
+            'hero'     => ['title' => 'Visual & Teks Halaman Depan',   'icon' => '🖼️', 'desc' => 'Hero image, judul, dan deskripsi hotel'],
+            'facility' => ['title' => 'Seksi Fasilitas Hotel',         'icon' => '🏨', 'desc' => 'Judul, sub-judul, dan daftar fasilitas hotel'],
+            'footer'   => ['title' => 'Footer & Informasi Kontak',     'icon' => '📍', 'desc' => 'Alamat, telepon, email, dan hak cipta'],
+            'social'   => ['title' => 'Tautan Media Sosial',           'icon' => '🔗', 'desc' => 'Instagram, TikTok, YouTube'],
+            'promo'    => ['title' => 'Kampanye & Banner Promo',       'icon' => '📣', 'desc' => 'Banner promosi dan event spesial'],
         ];
+
+        if (\App\Models\SiteSetting::count() === 0) {
+            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'SiteSettingSeeder']);
+        }
+
+        // Auto-seed facility CMS keys if missing
+        if (!SiteSetting::where('key', 'facility_title')->exists()) {
+            SiteSetting::updateOrCreate(['key' => 'facility_title'], ['group' => 'facility', 'label' => 'Judul Seksi Fasilitas', 'type' => 'text', 'value' => 'Pengalaman Istimewa']);
+            SiteSetting::updateOrCreate(['key' => 'facility_subtitle'], ['group' => 'facility', 'label' => 'Sub-Judul Seksi Fasilitas', 'type' => 'textarea', 'value' => 'Nikmati berbagai fasilitas premium yang kami sediakan untuk kenyamanan Anda selama menginap']);
+        }
 
         $settings = [];
         foreach (array_keys($groups) as $group) {
             $settings[$group] = SiteSetting::getGroup($group);
         }
 
-        return view('admin.cms', compact('groups', 'settings'));
+        $facilities = Facility::all();
+
+        return view('admin.cms', compact('groups', 'settings', 'facilities'));
     }
 
     public function updateCms(Request $request)
@@ -364,6 +455,30 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->route('admin.cms')->with('success', 'Pengaturan website berhasil diperbarui.');
+        // Facility Updates
+        if ($request->has('facility') && is_array($request->facility)) {
+            foreach ($request->facility as $id => $data) {
+                $facility = Facility::find($id);
+                if ($facility) {
+                    $facility->name = $data['name'] ?? $facility->name;
+                    $facility->description = $data['description'] ?? $facility->description;
+
+                    if (isset($data['image']) && $request->hasFile("facility.{$id}.image")) {
+                        $request->validate([
+                            "facility.{$id}.image" => 'image|max:3072',
+                        ]);
+
+                        if ($facility->image) {
+                            Storage::disk('public')->delete($facility->image);
+                        }
+
+                        $facility->image = $request->file("facility.{$id}.image")->store('facilities', 'public');
+                    }
+                    $facility->save();
+                }
+            }
+        }
+
+        return redirect()->route('admin.cms')->with('success', 'Pengaturan website dan fasilitas berhasil diperbarui.');
     }
 }

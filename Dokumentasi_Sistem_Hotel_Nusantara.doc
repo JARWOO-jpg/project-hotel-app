@@ -1,0 +1,93 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Dokumentasi Sistem Hotel Nusantara</title>
+<style>
+    body { font-family: 'Arial', sans-serif; line-height: 1.6; }
+    h1 { text-align: center; color: #2c3e50; }
+    h2, h3 { color: #34495e; }
+    p { text-align: justify; }
+    ul { margin-bottom: 15px; }
+</style>
+</head>
+<body>
+
+    <h1>DOKUMENTASI ANALISIS & LOGIKA SISTEM<br>"HOTEL NUSANTARA"</h1>
+    <hr>
+
+    <h2>BAGIAN I: Analisis Arsitektur dan Teknologi</h2>
+    <p>Berdasarkan penelusuran pada struktur direktori, file konfigurasi, dan alur kode (seperti <code>composer.json</code>, <code>package.json</code>, dan rute navigasi), berikut adalah analisis mendalam mengenai project sistem "Hotel Nusantara".</p>
+
+    <h3>1. Bahasa Pemrograman & Framework yang Digunakan</h3>
+    <ul>
+        <li><b>Bahasa Pemrograman Utama:</b>
+            <ul>
+                <li><b>PHP:</b> Digunakan sebagai inti sistem <i>backend</i> (logika server).</li>
+                <li><b>HTML (melalui Blade Template):</b> Digunakan untuk merangkai kerangka antarmuka pengguna.</li>
+                <li><b>CSS:</b> Digunakan untuk <i>styling</i> antarmuka.</li>
+                <li><b>JavaScript:</b> Digunakan untuk fungsionalitas interaktif <i>client-side</i> (seperti modal pop-up, alert, dan interaksi form dinamis).</li>
+            </ul>
+        </li>
+        <li><b>Framework & Tools:</b>
+            <ul>
+                <li><b>Laravel (versi 11/10+):</b> Framework PHP utama yang menjadi tulang punggung arsitektur project ini.</li>
+                <li><b>Tailwind CSS:</b> Framework CSS <i>utility-first</i> yang digunakan untuk merancang desain yang responsif dan modern secara cepat.</li>
+                <li><b>Vite:</b> Digunakan sebagai <i>module bundler</i> untuk mempercepat proses kompilasi asset frontend (Tailwind CSS dan JavaScript).</li>
+                <li><b>MySQL:</b> Sistem manajemen database relasional (RDBMS) yang digunakan untuk menyimpan semua data operasional hotel secara permanen.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>2. Alur Pembuatan Project (Dari Awal hingga Akhir)</h3>
+    <p>Berdasarkan jejak rekam arsitekturnya, alur logis pembuatan aplikasi ini melewati fase-fase berikut:</p>
+    <ol>
+        <li><b>Fase Konfigurasi Dasar & Database Setup:</b> Instalasi awal kerangka kerja Laravel dan pengaturan koneksi database (transisi sistem dari database bawaan SQLite ke ekosistem MySQL). Pembuatan struktur tabel menggunakan <i>Migration</i> (tabel users, rooms, facilities, bookings, site_settings, dan services).</li>
+        <li><b>Fase Autentikasi & Sistem Keamanan Akses:</b> Membangun fungsi Registrasi dan Login pengguna. Menerapkan fitur <i>Middleware</i> untuk memecah hak akses menjadi 3 rute berbeda: <b>Guest (Tamu)</b>, <b>Receptionist (Resepsionis)</b>, dan <b>Admin</b>.</li>
+        <li><b>Fase Pengembangan Inti Logika Data (CRUD):</b> Membangun fitur manajemen (Create, Read, Update, Delete) untuk master data oleh Admin: Data Kamar, Data Fasilitas, serta Data User/Karyawan.</li>
+        <li><b>Fase Sistem Transaksi Pemesanan (Booking Engine):</b> Membangun alur tamu dari mencari kamar kosong, proses booking, hingga menampilkan invoice. Serta membangun alat kerja Resepsionis: Fungsi validasi Check-In, penambahan biaya layanan esktra, hingga validasi Check-Out dan kalkulasi tagihan.</li>
+        <li><b>Fase CMS (Content Management System) & Optimalisasi UI:</b> Membangun halaman panel CMS agar Admin dapat mengubah tampilan website (seperti link sosial media) tanpa koding. Menyempurnakan antarmuka tamu menggunakan elemen dinamis (pop-up fasilitas).</li>
+    </ol>
+
+    <h3>3. Keterhubungan dan Integrasi File (Sistem Arsitektur MVC)</h3>
+    <p>Sistem dibangun menggunakan pola desain <b>MVC (Model-View-Controller)</b> yang terstruktur:</p>
+    <ul>
+        <li><b>Jalur Navigasi (Routes - <code>routes/web.php</code>):</b> Setiap URL yang diketikkan di browser diproses pertama kali di sini. File ini mem-filter hak akses dan mengarahkan perintah ke Controller.</li>
+        <li><b>Otak Logika (Controllers):</b> Berisi kelas yang memproses perintah, dipisah berdasarkan peran (misal: <code>AdminController</code>, <code>ReceptionistController</code>, <code>BookingController</code>).</li>
+        <li><b>Penghubung Database (Models):</b> Controller tidak berinteraksi langsung dengan database, melainkan menugaskan Model (seperti <code>Room.php</code>, <code>Booking.php</code>). Model bertugas menjalankan perintah query MySQL.</li>
+        <li><b>Tampilan Akhir (Views - <code>resources/views/</code>):</b> File berakhiran <code>.blade.php</code> bertugas menggabungkan data dinamis dari Controller dengan kerangka HTML dan Tailwind CSS untuk ditampilkan sebagai visual aplikasi.</li>
+    </ul>
+
+    <hr>
+
+    <h2>BAGIAN II: Penjelasan Logika Sistem (Alur Kerja)</h2>
+    <p>Sistem ini dirancang dengan pola <b>"State Machine"</b> (Mesin Status) di mana setiap entitas (seperti status Kamar dan status Booking) berputar secara logis untuk mencegah bentrokan/overbooking. Berikut adalah penjelasan logika sistem dari hulu ke hilir:</p>
+
+    <h3>1. Logika Pemesanan Kamar (Booking Flow oleh Tamu)</h3>
+    <ul>
+        <li><b>Pengecekan Ketersediaan:</b> Tamu memasukkan tanggal Check-in dan Check-out. Sistem memeriksa database (metode <code>isAvailableForDates</code>) untuk memastikan kamar tidak sedang dipesan pada rentang tanggal tersebut.</li>
+        <li><b>Logika Overbooking & Waiting List:</b> Jika kamar penuh, sistem tidak langsung menolak, tetapi menawarkan opsi <b>Waiting List</b>. Jika disetujui, pesanan masuk dengan status <code>waiting_list</code>.</li>
+        <li><b>Pembayaran & Konfirmasi:</b> Tamu memilih metode pembayaran (Lunas atau DP 50%). Sistem menyimpan riwayat ini ke tabel transaksi dan mengubah status booking menjadi <code>confirmed</code>.</li>
+        <li><b>Logika Pembatalan (Refund):</b> Jika tamu membatalkan secara sepihak, sistem membaca status pembayaran, menghitung refund sebesar 80% (potongan 20% biaya admin), dan melepaskan status kamar kembali menjadi tersedia (available).</li>
+    </ul>
+
+    <h3>2. Logika Kedatangan Tamu (Check-In oleh Resepsionis)</h3>
+    <ul>
+        <li><b>Validasi:</b> Saat kedatangan, sistem memvalidasi ID Booking. Jika statusnya masih <i>pending</i> (belum dibayar), sistem menolak proses check-in.</li>
+        <li><b>Eksekusi Check-in:</b> Saat resepsionis mengeksekusi Check-in, sistem melakukan dua hal sekaligus: mengubah status pemesanan menjadi <code>checked_in</code> dan mengubah status fisik Kamar menjadi <code>occupied</code> (Terisi).</li>
+    </ul>
+
+    <h3>3. Logika Layanan Tambahan (Room Services)</h3>
+    <p>Jika tamu memesan makan malam, laundry, atau spa selama menginap, resepsionis memasukkannya melalui menu <i>Add Service</i>. Sistem akan menghitung: Harga Layanan × Kuantitas, dan menyimpannya di tabel <code>services</code> yang langsung dikaitkan (berelasi) dengan ID Booking tamu tersebut.</p>
+
+    <h3>4. Logika Kepulangan (Check-Out & Kalkulasi Tagihan Akhir)</h3>
+    <ul>
+        <li><b>Kalkulasi Tagihan Akhir:</b> Sistem mengumpulkan semua data untuk menjumlahkan: Total Harga Kamar + Total Layanan Tambahan (Services) = <b>Total Bill Akhir</b>.</li>
+        <li><b>Kalkulasi Sisa Bayar:</b> Sistem mengurangkan Total Bill Akhir dengan Uang DP/Pembayaran awal. Jika ada sisa tagihan, tamu melunasi sisa tersebut.</li>
+        <li><b>Pelepasan Kamar:</b> Setelah lunas, status pemesanan diubah menjadi <code>checked_out</code>, dan kamar di-reset menjadi <code>available</code> (Kosong/Tersedia). Sistem kemudian men-generate Final Invoice.</li>
+    </ul>
+
+    <h3>5. Logika Pengelolaan Konten (CMS oleh Admin)</h3>
+    <p>Untuk mengubah konten di halaman depan (Homepage), Admin menginput perubahan (seperti link sosial media atau upload foto fasilitas) melalui dashboard. Data ini disimpan di tabel <code>site_settings</code> dan <code>facilities</code>. Saat tamu mengunjungi beranda, <code>HomeController</code> akan membaca tabel-tabel tersebut dan memunculkannya pada desain antar muka secara real-time.</p>
+
+</body>
+</html>
